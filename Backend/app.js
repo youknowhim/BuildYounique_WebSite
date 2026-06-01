@@ -14,6 +14,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+SYSTEM_PROMPT = "You are a helpful assistant";
 
 app.use("/api/v1/users", user_Router);
 app.use("/api/v1/colleges", collegeRouter);
