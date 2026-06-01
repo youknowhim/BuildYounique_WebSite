@@ -14,13 +14,13 @@ export default function ClientsCarousel() {
   }, []);
 
   // Build the displayed window. Desktop: prev, current, next (3 cards). Mobile: just current.
-  const positions = isMobile
-    ? [{ client: CLIENTS[index], pos: 'center', key: 'c-' + index }]
-    : [
-        { client: CLIENTS[(index - 1 + CLIENTS.length) % CLIENTS.length], pos: 'side',   key: 'l-' + index },
-        { client: CLIENTS[index],                                          pos: 'center', key: 'c-' + index },
-        { client: CLIENTS[(index + 1) % CLIENTS.length],                    pos: 'side',   key: 'r-' + index },
-      ];
+const positions = isMobile
+  ? [{ client: CLIENTS[index], pos: 'center', key: 'center' }]
+  : [
+      { client: CLIENTS[(index - 1 + CLIENTS.length) % CLIENTS.length], pos: 'side',   key: 'left' },
+      { client: CLIENTS[index],                                          pos: 'center', key: 'center' },
+      { client: CLIENTS[(index + 1) % CLIENTS.length],                    pos: 'side',   key: 'right' },
+    ];
 
   return (
     <div onMouseEnter={pause} onMouseLeave={resume}>
@@ -29,7 +29,7 @@ export default function ClientsCarousel() {
           <div
             key={key}
             className={`client-card ${pos === 'center' ? 'is-center' : 'is-side'}`}
-            style={{ animation: 'fadeIn 360ms var(--ease-out)' }}
+            
           >
             {client.src ? (
               <img src={client.src} alt={client.name} onError={(e) => { e.target.style.display = 'none'; }} />
