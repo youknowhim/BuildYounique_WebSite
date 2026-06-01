@@ -112,7 +112,7 @@ export default function Home({ onNavigate, onOpenCourse }) {
       </section>
 
       {/* ============ TRUSTED BY (clients carousel) ============ */}
-      <section className="section-tight">
+      <section className="section-tight clients-strip">
         <div className="container">
           <Reveal>
             <p className="eyebrow" style={{ textAlign: 'center', marginBottom: 36 }}>Trusted by teams worldwide</p>

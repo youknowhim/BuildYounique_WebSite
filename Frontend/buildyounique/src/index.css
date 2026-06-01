@@ -942,6 +942,27 @@ body.lock { overflow: hidden; padding-right: var(--scrollbar-w, 0px); }
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+/* --------------------------------------------------------------------
+   Clients strip — full-width white band so dark logos read cleanly
+   -------------------------------------------------------------------- */
+.clients-strip {
+  background: #FAFBFE;
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(32px, 4vw, 52px);
+}
+.clients-strip .eyebrow {
+  color: #000;
+}
+.clients-strip .eyebrow::before {
+  background: #000;
+}
+.clients-strip .carousel-dot {
+  background: rgba(8, 36, 58, 0.18);
+}
+.clients-strip .carousel-dot.active {
+  background: var(--grad-signature);
+}
 .nav-drawer-link {
   font-family: var(--f-display);
   font-size: clamp(28px, 6vw, 44px);
