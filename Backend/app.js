@@ -9,6 +9,7 @@ const collegeRouter = require("./routes/collegeRouter.js");
 const teamRouter = require("./routes/teamRouter.js");
 const careerRouter = require("./routes/careerRouter.js");
 const contactRouter = require("./routes/contactRouter.js");
+const hackathonEventRouter = require("./routes/hackathonEventRouter.js");
 const app = express();
 app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
 app.use(helmet());
@@ -21,6 +22,7 @@ app.use("/api/v1/colleges", collegeRouter);
 app.use("/api/v1/teams", teamRouter);
 app.use("/api/v1/career-applications", careerRouter);
 app.use("/api/v1/contact-enquiries", contactRouter);
+app.use("/api/v1/hackathon-events", hackathonEventRouter);
 
 app.get("/health", (req, res) => {
   res.status(200).send("API server up");
