@@ -197,14 +197,15 @@ create table courses(
 
 create table training(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
- name VARCHAR(255) NOT NULL,
- email VARCHAR(255) NOT NULL,
- phone VARCHAR(20) NOT NULL,
+    course_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
     college_name VARCHAR(255) NOT NULL,
     year_of_study VARCHAR(50) NOT NULL,
     address VARCHAR(500) NOT NULL,
-    course_id BIGINT NOT NULL,
-    FOREIGN KEY (course_id) REFERENCES courses(id)
+    FOREIGN KEY (course_id) REFERENCES courses(id) on delete cascade,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 )
 
 
