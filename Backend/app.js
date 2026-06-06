@@ -5,6 +5,7 @@ const AppError = require("./utils/appError.js");
 const globalErrorHandler = require("./utils/globalErrorHandler");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger.js");
+const path = require("path");
 
 const user_Router = require("./routes/userRouter.js");
 const collegeRouter = require("./routes/collegeRouter.js");
@@ -14,6 +15,7 @@ const contactRouter = require("./routes/contactRouter.js");
 const hackathonEventRouter = require("./routes/hackathonEventRouter.js");
 const coursesRouter = require("./routes/coursesRouter.js");
 const trainingRouter = require("./routes/trainingRouter.js");
+const jobDescriptionRouter = require("./routes/jobDescriptionRouter.js");
 const app = express();
 const allowedOrigins = [
   process.env.FRONTEND_URL,
@@ -31,6 +33,9 @@ Our live training courses include Full-Stack, Mobile, AI, Blockchain, Cloud, and
 Our hackathons include Businessathon, Codeathon, Gameathon, Cyberthon, and AIthon. Entry is ₹1,000 per team of 2.
 Be professional, concise, and helpful. Always encourage users to contact us via email at buildyounique2020@gmail.com or WhatsApp at +91 70478 29662 for more specific inquiries.`;
 
+// Serve uploaded files (resumes, etc.)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
 
@@ -40,6 +45,7 @@ app.use("/api/v1/teams", teamRouter);
 app.use("/api/v1/career-applications", careerRouter);
 app.use("/api/v1/contact-enquiries", contactRouter);
 app.use("/api/v1/hackathon-events", hackathonEventRouter);
+app.use("/api/v1/job-descriptions", jobDescriptionRouter);
 app.use("/api/v1/courses", coursesRouter);
 app.use("/api/v1/trainings", trainingRouter);
 

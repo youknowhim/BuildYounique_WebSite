@@ -29,6 +29,7 @@ router.post(
 // Login routes
 router.post("/login", teamController.loginTeam);
 router.post("/login/verify", teamController.verifyTeamLogin);
+
 router.post("/verify-email", teamController.verifyTeamLeaderEmail);
 // Team routes under /api/v1/teams
 router

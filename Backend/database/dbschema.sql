@@ -209,6 +209,32 @@ create table training(
 )
 
 
+CREATE TABLE job_descriptions (
+
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    job_title VARCHAR(255) NOT NULL,
+    location VARCHAR(255),
+    employment_type ENUM(
+        'Full-Time',
+
+        'Part-Time',
+
+        'Contract',
+
+        'Internship',
+
+        'Freelance'
+
+    ) DEFAULT 'Full-Time',
+    experience_required DECIMAL(4,1) DEFAULT 0,
+    job_description TEXT NOT NULL,
+    openings INT DEFAULT 1,
+    status ENUM('Draft', 'Active', 'Closed') DEFAULT 'Active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+);
+
 
 
 -- Make landing page For Registration only.
