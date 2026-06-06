@@ -15,11 +15,21 @@ const hackathonEventRouter = require("./routes/hackathonEventRouter.js");
 const coursesRouter = require("./routes/coursesRouter.js");
 const trainingRouter = require("./routes/trainingRouter.js");
 const app = express();
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+].filter(Boolean);
+app.use(cors({ origin: (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)) }));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-SYSTEM_PROMPT = "You are a helpful assistant";
+const SYSTEM_PROMPT = `You are the official AI assistant for Buildyounique, a software development studio based in Howrah, West Bengal (India). 
+You help clients with inquiries about our services, training courses, hackathons, careers, and contact information. 
+Our services include: Web Development, Mobile App Development, AI Development, Blockchain, Cloud Solutions, AR/VR, and RPA Automation.
+Our live training courses include Full-Stack, Mobile, AI, Blockchain, Cloud, and Cyber Security. They are currently discounted to ₹3,000 (from ₹5,000).
+Our hackathons include Businessathon, Codeathon, Gameathon, Cyberthon, and AIthon. Entry is ₹1,000 per team of 2.
+Be professional, concise, and helpful. Always encourage users to contact us via email at buildyounique2020@gmail.com or WhatsApp at +91 70478 29662 for more specific inquiries.`;
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
