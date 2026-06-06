@@ -1,8 +1,7 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, MapPin, Briefcase, Clock, ArrowRight, CheckCircle2, AlertCircle, Upload, X } from 'lucide-react';
-import { JOBS } from '../data.js';
-import { HACKATHON_API, apiRequest } from '../config.js';
+import { HACKATHON_API, apiRequest, API_ENDPOINTS } from '../config.js';
 
 const API_V1_CAREERS = HACKATHON_API.colleges.replace('/colleges', '/career-applications');
 import { V, runValidation } from '../validators.js';
@@ -11,21 +10,42 @@ import Modal from '../components/Modal.jsx';
 
 export default function Careers() {
   const [query, setQuery] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [data, setData] = useState({ name: '', email: '', phone: '', expectedCTC: '', experience: '', portfolio: '', coverNote: '', resumeUrl: '' });
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
 
+  useEffect(() => {
+    apiRequest(API_ENDPOINTS.jobDescriptions).then((res) => {
+      if (res.ok && res.data?.job_descriptions) {
+        const mapped = res.data.job_descriptions
+          .filter(j => j.status === 'Active')
+          .map(j => ({
+            id: j.id,
+            title: j.job_title,
+            type: j.employment_type,
+            experience: j.experience_required ? `${j.experience_required}+ yrs` : 'Any',
+            location: j.location || 'Remote',
+            team: j.employment_type === 'Internship' ? 'Early Talent' : 'Engineering'
+          }));
+        setJobs(mapped);
+      }
+      setLoading(false);
+    });
+  }, []);
+
   const filteredJobs = useMemo(() => {
-    if (!query.trim()) return JOBS;
+    if (!query.trim()) return jobs;
     const q = query.toLowerCase();
-    return JOBS.filter((j) =>
+    return jobs.filter((j) =>
       j.title.toLowerCase().includes(q) ||
       j.team.toLowerCase().includes(q) ||
       j.type.toLowerCase().includes(q)
     );
-  }, [query]);
+  }, [query, jobs]);
 
   function update(k, v) { setData((d) => ({ ...d, [k]: v })); setErrors((e) => ({ ...e, [k]: undefined })); }
   function reset() {
@@ -74,7 +94,7 @@ export default function Careers() {
   return (
     <>
       <PageShell
-        chip={`Careers · ${JOBS.length} open roles`}
+        chip={`Careers`}
         title="Join the <em>studio</em>."
         lead="All roles fully remote. Honest salary bands published. Real engineering work — not staffing-agency boilerplate."
       >
@@ -96,11 +116,17 @@ export default function Careers() {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <p className="eyebrow no-line" style={{ marginBottom: 22 }}>
-            {filteredJobs.length} role{filteredJobs.length !== 1 ? 's' : ''} {query && `matching "${query}"`}
-          </p>
-          <div className="grid-2" style={{ gap: 14 }}>
-            {filteredJobs.map((j) => (
+          {loading ? (
+            <div style={{ padding: 40, textAlign: 'center' }}>
+              <span className="spinner" style={{ width: 24, height: 24 }} />
+            </div>
+          ) : (
+            <>
+              <p className="eyebrow no-line" style={{ marginBottom: 22 }}>
+                {filteredJobs.length} role{filteredJobs.length !== 1 ? 's' : ''} {query && `matching "${query}"`}
+              </p>
+              <div className="grid-2" style={{ gap: 14 }}>
+                {filteredJobs.map((j) => (
               <div
                 key={j.id}
                 className="job-card"
@@ -122,11 +148,18 @@ export default function Careers() {
                 
               </div>
             ))}
-          </div>
-          {filteredJobs.length === 0 && (
-            <p className="muted" style={{ padding: 24, fontStyle: 'italic', textAlign: 'center' }}>
-              No roles match "{query}". Try a broader search, or just send us your CV anyway.
-            </p>
+            </div>
+              {filteredJobs.length === 0 && !query && (
+                <p className="muted" style={{ padding: 24, fontStyle: 'italic', textAlign: 'center' }}>
+                  No job postings now. Check back later!
+                </p>
+              )}
+              {filteredJobs.length === 0 && query && (
+                <p className="muted" style={{ padding: 24, fontStyle: 'italic', textAlign: 'center' }}>
+                  No roles match "{query}". Try a broader search, or just send us your CV anyway.
+                </p>
+              )}
+            </>
           )}
         </div>
       </section>

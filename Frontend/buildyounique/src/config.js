@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
   chat:       `${API_BASE}/api/chat`,
   brochure:   `${API_BASE}/api/brochure`,
   coupon:     `${API_BASE}/api/coupon`,
+  jobDescriptions: `${API_V1}/job-descriptions`,
 };
 
 // --- Hackathon / team registration API (real backend: /api/v1) ------
