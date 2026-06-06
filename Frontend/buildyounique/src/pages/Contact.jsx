@@ -23,7 +23,13 @@ export default function Contact() {
     });
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setBusy(true);
-    await apiCall(API_ENDPOINTS.contact, data);
+    await apiCall(API_ENDPOINTS.contact, {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      service_required: data.service || null,
+      project_description: data.description,
+    });
     setBusy(false); setDone(true);
   }
 

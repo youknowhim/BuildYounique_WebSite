@@ -3,7 +3,7 @@ import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
 import { NAV } from '../data.js';
 import { useScrollY, useLockBody } from '../hooks.js';
 
-export default function Navbar({ page, onNavigate }) {
+export default function Navbar({ page, onNavigate, onTeamLogin }) {
   const scrolled = useScrollY(30);
   const [drawer, setDrawer] = useState(false);
   const [expanded, setExpanded] = useState(null);
@@ -86,6 +86,15 @@ export default function Navbar({ page, onNavigate }) {
                         >
                           See all {n.label.toLowerCase()} →
                         </button>
+                        {n.id === 'hackathons' && (
+                          <button
+                            className="nav-dropdown-item"
+                            onClick={() => { setDrawer(false); setExpanded(null); onTeamLogin?.(); }}
+                            role="menuitem"
+                          >
+                            ↪ Already registered? Log in
+                          </button>
+                        )}
                       </>
                     )}
                   </div>
@@ -160,6 +169,15 @@ export default function Navbar({ page, onNavigate }) {
                         </button>
                       );
                     })}
+                    {n.id === 'hackathons' && (
+                      <button
+                        className="nav-drawer-sub-link"
+                        onClick={() => { setDrawer(false); setExpanded(null); onTeamLogin?.(); }}
+                        style={{ color: 'var(--c-blue)', fontWeight: 600 }}
+                      >
+                        ↪ Already registered? Log in
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

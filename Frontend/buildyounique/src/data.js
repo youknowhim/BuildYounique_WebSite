@@ -132,11 +132,11 @@ export const PARTNERS = [
 
 // --- Team (5) -------------------------------------------------------
 export const TEAM = [
-  { name: 'Arnab Sengupta',     role: 'Engineering Lead',           img: ASSETS.team.engineeringLead, bio: 'Leads MERN / Next.js teams. 9 years across product engineering.', linkedin: '#' },
-  { name: 'Riya Mukherjee',     role: 'Design Lead',                img: ASSETS.team.designLead,      bio: 'Product design and motion. Previously at consumer fintech.',     linkedin: '#' },
-  { name: 'Aditya Sharma',      role: 'Software Engineer',          img: ASSETS.team.juniorDeveloper, bio: 'Full-stack engineer. React, Node, infra.',                       linkedin: '#' },
-  { name: 'Priya Sharma',       role: 'Technical Project Manager',  img: ASSETS.team.projectManager,  bio: 'Delivery, scope, sprints. Keeps the trains running.',            linkedin: '#' },
-  { name: 'Rohan Chatterjee',   role: 'AI Engineer',                img: ASSETS.team.aiEngineer,      bio: 'RAG systems, LLM applications, fine-tuning pipelines.',          linkedin: '#' },
+  { name: 'Arnab Sengupta',     role: 'Engineering Lead',           bio: 'Leads MERN / Next.js teams. 9 years across product engineering.' },
+  { name: 'Riya Mukherjee',     role: 'Design Lead',                bio: 'Product design and motion. Previously at consumer fintech.' },
+  { name: 'Aditya Sharma',      role: 'Software Engineer',          bio: 'Full-stack engineer. React, Node, infra.' },
+  { name: 'Priya Sharma',       role: 'Technical Project Manager',  bio: 'Delivery, scope, sprints. Keeps the trains running.' },
+  { name: 'Rohan Chatterjee',   role: 'AI Engineer',                bio: 'RAG systems, LLM applications, fine-tuning pipelines.' },
 ];
 
 // --- Services (7) ---------------------------------------------------
@@ -212,6 +212,7 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #4F8AFE 0%, #06D6A0 100%)',
     categories: ['Consumer', 'B2B SaaS', 'D2C', 'Marketplace', 'Sustainability'],
     description: 'Founders, designers and engineers team up to ship a real go-to-market in 48 hours. Mentorship from VCs and seasoned operators.',
+    stages: [{ n: '01', title: 'Ideation', time: 'Hrs 0–6' }, { n: '02', title: 'Build & pitch deck', time: 'Hrs 6–40' }, { n: '03', title: 'Demo day', time: 'Hrs 40–48' }],
   },
   {
     id: 'codeathon', name: 'Codeathon', duration: '36 hrs', mode: 'Online', prize: '₹3,00,000',
@@ -219,6 +220,7 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #A855F7 0%, #4F8AFE 100%)',
     categories: ['Web', 'Mobile', 'Backend', 'Systems', 'Open Source'],
     description: 'Tight problem statements, brutal judging on code quality, performance and architecture. Bring your editor of choice.',
+    stages: [{ n: '01', title: 'Problem reveal', time: 'Hrs 0–2' }, { n: '02', title: 'Build sprint', time: 'Hrs 2–30' }, { n: '03', title: 'Code review & judging', time: 'Hrs 30–36' }],
   },
   {
     id: 'gameathon', name: 'Gameathon', duration: '48 hrs', mode: 'Hybrid', prize: '₹2,00,000',
@@ -226,6 +228,7 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #EC4899 0%, #FFB547 100%)',
     categories: ['Hyper-casual', '2D Indie', '3D', 'Web', 'AR/VR'],
     description: 'Unity, Godot, Three.js — engine of your choice. Judged on fun, craft and originality. Demo to a live audience.',
+    stages: [{ n: '01', title: 'Theme reveal', time: 'Hrs 0–1' }, { n: '02', title: 'Build & playtest', time: 'Hrs 1–42' }, { n: '03', title: 'Live demo', time: 'Hrs 42–48' }],
   },
   {
     id: 'cyberthon', name: 'Cyberthon', duration: '24 hrs', mode: 'Online', prize: '₹3,00,000',
@@ -233,6 +236,7 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #FF5C7C 0%, #A855F7 100%)',
     categories: ['CTF', 'Red Team', 'Blue Team', 'Forensics', 'Reverse Eng.'],
     description: 'CTF challenges, red-vs-blue rounds, real-world incident simulations. Bring your tooling.',
+    stages: [{ n: '01', title: 'CTF opens', time: 'Hrs 0–1' }, { n: '02', title: 'Red vs Blue rounds', time: 'Hrs 1–20' }, { n: '03', title: 'Scoreboard & winners', time: 'Hrs 20–24' }],
   },
   {
     id: 'aithon', name: 'AIthon', duration: '48 hrs', mode: 'Hybrid', prize: '₹5,00,000',
@@ -240,6 +244,7 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #06D6A0 0%, #4F8AFE 100%)',
     categories: ['LLM Apps', 'RAG', 'Agents', 'Vision', 'Voice'],
     description: 'Real product, real users, real metrics. Demo to an audience of investors and engineers.',
+    stages: [{ n: '01', title: 'Kickoff & mentors', time: 'Hrs 0–4' }, { n: '02', title: 'Build & eval', time: 'Hrs 4–42' }, { n: '03', title: 'Investor demo', time: 'Hrs 42–48' }],
   },
 ];
 
@@ -249,7 +254,6 @@ export const COURSES = [
     id: 'fullstack', name: 'Full-Stack Engineering', weeks: 12,
     cover: ASSETS.training.fullstack,
     grad: 'linear-gradient(135deg, #4F8AFE 0%, #06D6A0 100%)',
-    mentor: 'Led by Arnab Sengupta (Engineering Lead at Buildyounique, 9 yrs).',
     assessment: 'Weekly project submissions + final capstone reviewed by senior engineers.',
     outcome: 'Ship a deployed full-stack app with CI/CD, tests, and observability. Portfolio-ready.',
     schedule: 'Mon, Wed, Fri · 7–9 PM IST · Live + recorded',
@@ -274,7 +278,6 @@ export const COURSES = [
     id: 'mobile', name: 'Mobile App Development', weeks: 10,
     cover: ASSETS.training.mobile,
     grad: 'linear-gradient(135deg, #A855F7 0%, #EC4899 100%)',
-    mentor: 'Led by senior mobile engineers — Flutter and React Native experts.',
     assessment: 'Two app submissions + a published Play Store / App Store release as capstone.',
     outcome: 'Publish a real mobile app on Play Store / App Store as the capstone.',
     schedule: 'Tue, Thu, Sat · 7–9 PM IST · Live + recorded',
@@ -297,7 +300,6 @@ export const COURSES = [
     id: 'ai', name: 'AI Engineering', weeks: 10,
     cover: ASSETS.training.ai,
     grad: 'linear-gradient(135deg, #06D6A0 0%, #4F8AFE 100%)',
-    mentor: 'Led by Rohan Chatterjee (AI Engineer at Buildyounique).',
     assessment: 'RAG mid-bootcamp, agent system as final capstone — graded on eval harness.',
     outcome: 'Ship a production RAG system and an agent that performs real tasks against an eval harness.',
     schedule: 'Mon, Wed, Sat · 7–9 PM IST · Live + recorded',
@@ -320,7 +322,6 @@ export const COURSES = [
     id: 'blockchain', name: 'Blockchain Engineering', weeks: 12,
     cover: ASSETS.training.blockchain,
     grad: 'linear-gradient(135deg, #FFB547 0%, #EC4899 100%)',
-    mentor: 'Led by senior smart-contract engineers shipping on EVM and Solana mainnet.',
     assessment: 'Solidity assignments + a deployed dApp on testnet as capstone.',
     outcome: 'Ship audited smart contracts to testnet and a dApp front-end users can actually use.',
     schedule: 'Tue, Thu, Sat · 8–10 PM IST · Live + recorded',
@@ -345,7 +346,6 @@ export const COURSES = [
     id: 'cloud', name: 'Cloud & DevOps', weeks: 8,
     cover: ASSETS.training.cloud,
     grad: 'linear-gradient(135deg, #4F8AFE 0%, #A855F7 100%)',
-    mentor: 'Led by AWS/Azure certified engineers running production workloads at scale.',
     assessment: 'Two infra builds + a full IaC + CI/CD pipeline as capstone.',
     outcome: 'Stand up production-grade infra with IaC, CI/CD and observability — by yourself.',
     schedule: 'Mon, Wed, Fri · 8–10 PM IST · Live + recorded',
@@ -366,7 +366,6 @@ export const COURSES = [
     id: 'cybersec', name: 'Cyber Security', weeks: 10,
     cover: ASSETS.training.cybersec,
     grad: 'linear-gradient(135deg, #FF5C7C 0%, #A855F7 100%)',
-    mentor: 'Led by certified offensive security professionals (OSCP/OSEP).',
     assessment: 'Weekly CTF challenges + a full penetration-test report as capstone.',
     outcome: 'Conduct a full penetration test with a professional report and remediation plan.',
     schedule: 'Tue, Thu, Sun · 8–10 PM IST · Live + recorded',

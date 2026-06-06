@@ -65,16 +65,10 @@ export default function About() {
             {TEAM.map((m, i) => (
               <Reveal key={m.name} delay={i * 70}>
                 <div className="team-card">
-                  <div className="team-photo">
-                    <img src={m.img} alt={m.name} onError={(e) => { e.target.style.display = 'none'; }} />
-                  </div>
                   <div style={{ marginTop: 18 }}>
                     <h4 className="display display-sm" style={{ marginBottom: 4 }}>{m.name}</h4>
                     <p className="mono" style={{ fontSize: 11.5, color: 'var(--c-blue)', marginBottom: 10, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{m.role}</p>
                     <p className="muted" style={{ fontSize: 13.5, lineHeight: 1.55, marginBottom: 12 }}>{m.bio}</p>
-                    <a href={m.linkedin} target="_blank" rel="noreferrer noopener" className="flex items-center gap-1 muted" style={{ fontSize: 12, fontFamily: 'var(--f-mono)' }}>
-                      <Linkedin size={12} /> LinkedIn
-                    </a>
                   </div>
                 </div>
               </Reveal>

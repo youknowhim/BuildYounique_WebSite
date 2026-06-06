@@ -1,6 +1,5 @@
-import { Tag, Clock, User, Award, ArrowRight, MapPin } from 'lucide-react';
-import { COURSES, COURSE_PRICING, COMPANY } from '../data.js';
-import { ASSETS } from '../config.js';
+import { Tag, Clock, Award, ArrowRight } from 'lucide-react';
+import { COURSES, COURSE_PRICING } from '../data.js';
 import { useReveal } from '../hooks.js';
 import PageShell from '../components/PageShell.jsx';
 import Countdown from '../components/Countdown.jsx';
@@ -82,10 +81,6 @@ export default function Training({ onOpenCourse }) {
 
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 18 }}>
                       <p style={{ fontSize: 13.5, color: 'var(--c-muted)', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                        <User size={13} style={{ marginTop: 3, color: 'var(--c-blue)', flexShrink: 0 }} />
-                        <span>{c.mentor}</span>
-                      </p>
-                      <p style={{ fontSize: 13.5, color: 'var(--c-muted)', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                         <Award size={13} style={{ marginTop: 3, color: 'var(--c-success)', flexShrink: 0 }} />
                         <span>{c.outcome}</span>
                       </p>
@@ -104,24 +99,6 @@ export default function Training({ onOpenCourse }) {
             ))}
           </div>
 
-          {/* Workplace photo */}
-          <Reveal delay={120}>
-            <div style={{ marginTop: 80 }}>
-              <p className="eyebrow" style={{ textAlign: 'center', marginBottom: 28 }}>
-                <MapPin size={12} style={{ verticalAlign: 'middle' }} /> Where you'll learn
-              </p>
-              <div className="img-frame ar-16-9" style={{ borderRadius: 'var(--r-xl)' }}>
-                <img
-                  src={ASSETS.training.workplace}
-                  alt="Buildyounique studio — Howrah, West Bengal"
-                  onError={(e) => { e.target.style.display = 'none'; }}
-                />
-              </div>
-              <p className="muted text-center" style={{ marginTop: 18, fontSize: 14, fontStyle: 'italic' }}>
-                The Buildyounique studio — {COMPANY.address}
-              </p>
-            </div>
-          </Reveal>
         </div>
       </section>
     </>
