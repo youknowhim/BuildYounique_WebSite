@@ -74,7 +74,7 @@ export function Chatbot({ open, onClose }) {
     // Try backend first
     let reply;
     try {
-      const res = await apiCall(API_ENDPOINTS.chat, { message: text });
+      const res = await apiCall(API_ENDPOINTS.chat, { message: text, history: msgs });
       reply = res?.reply || null;
     } catch { reply = null; }
     if (!reply) reply = ruleFallback(text);

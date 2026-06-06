@@ -27,6 +27,7 @@ export default function App() {
   const [brochureOpen, setBrochureOpen] = useState(false);
   const [activeCourse, setActiveCourse] = useState(null);
   const [activeHack, setActiveHack] = useState(null);
+  const [teamLoginOpen, setTeamLoginOpen] = useState(false);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [page]);
 
@@ -49,7 +50,7 @@ export default function App() {
       case 'portfolio':  return <Portfolio   onNavigate={navigate} />;
       case 'whyus':      return <WhyUs       onNavigate={navigate} />;
       case 'training':   return <Training    onOpenCourse={setActiveCourse} />;
-      case 'hackathons': return <Hackathons  onOpenHackathon={setActiveHack} />;
+      case 'hackathons': return <Hackathons  onOpenHackathon={setActiveHack} onTeamLogin={() => setTeamLoginOpen(true)} />;
       case 'careers':    return <Careers     onNavigate={navigate} />;
       case 'blog':       return <Blog        onNavigate={navigate} />;
       case 'about':      return <About       onNavigate={navigate} />;
@@ -65,7 +66,7 @@ export default function App() {
       <div className="bg-hex" />
       <div className="bg-grain" />
 
-      <Navbar page={page} onNavigate={navigate} />
+      <Navbar page={page} onNavigate={navigate} onTeamLogin={() => setTeamLoginOpen(true)} />
 
       <main>
         {renderPage()}
@@ -91,9 +92,16 @@ export default function App() {
         onClose={() => setActiveCourse(null)}
       />
       <HackathonModal
+        mode="register"
         hack={activeHack}
         open={!!activeHack}
         onClose={() => setActiveHack(null)}
+      />
+      <HackathonModal
+        mode="login"
+        hack={null}
+        open={teamLoginOpen}
+        onClose={() => setTeamLoginOpen(false)}
       />
     </>
   );

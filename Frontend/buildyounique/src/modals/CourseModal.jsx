@@ -1,21 +1,41 @@
-import { useState } from 'react';
-import { CheckCircle2, AlertCircle, Check, User, BookOpen, Award, Calendar, Tag } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { CheckCircle2, AlertCircle, Check, BookOpen, Award, Calendar, Tag } from 'lucide-react';
 import Modal from '../components/Modal.jsx';
 import Countdown from '../components/Countdown.jsx';
-import { API_ENDPOINTS, apiCall } from '../config.js';
+import { HACKATHON_API, apiRequest } from '../config.js';
+
+const API_V1_PAY_TRAINING = HACKATHON_API.payTraining;
 import { V, runValidation } from '../validators.js';
 import { COURSE_PRICING } from '../data.js';
+
+const API_V1_COURSES = HACKATHON_API.colleges.replace('/colleges', '/courses');
+const API_V1_TRAINING = HACKATHON_API.colleges.replace('/colleges', '/trainings');
 
 export default function CourseModal({ course, open, onClose }) {
   const [data, setData] = useState({ name: '', email: '', phone: '', institution: '', year: '', address: '' });
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const [paid, setPaid] = useState(false);
+  const [payBusy, setPayBusy] = useState(false);
+  const [notice, setNotice] = useState('');
+  const [courseId, setCourseId] = useState(null);
+  const [trainingId, setTrainingId] = useState(null);
+
+  useEffect(() => {
+    if (!open || !course) return;
+    apiRequest(API_V1_COURSES).then((r) => {
+      if (r.ok && r.data?.courses) {
+        const match = r.data.courses.find((c) => c.name?.toLowerCase() === course.name?.toLowerCase());
+        if (match) setCourseId(match.id);
+      }
+    });
+  }, [open, course]);
 
   function update(k, v) { setData((d) => ({ ...d, [k]: v })); setErrors((e) => ({ ...e, [k]: undefined })); }
   function reset() {
     setData({ name: '', email: '', phone: '', institution: '', year: '', address: '' });
-    setErrors({}); setDone(false);
+    setErrors({}); setDone(false); setPaid(false); setPayBusy(false); setNotice(''); setCourseId(null); setTrainingId(null);
   }
 
   async function submit(e) {
@@ -25,16 +45,38 @@ export default function CourseModal({ course, open, onClose }) {
       email:       [V.required('Email required'), V.email()],
       phone:       [V.required('Phone required'), V.phone()],
       institution: [V.required('Institution required'), V.minLen(2)],
+      year:        [V.required('Year of study required')],
       address:     [V.required('Address required'), V.minLen(10, 'Please enter a full address (10+ chars)')],
     });
     if (Object.keys(errs).length) { setErrors(errs); return; }
-    setBusy(true);
-    await apiCall(API_ENDPOINTS.training, {
-      courseId: course.id, courseName: course.name,
-      originalPrice: COURSE_PRICING.original, discountedPrice: COURSE_PRICING.discounted,
-      ...data,
+    if (!courseId) { setNotice('Course not found in backend — please contact support.'); return; }
+    setBusy(true); setNotice('');
+    const r = await apiRequest(API_V1_TRAINING, {
+      method: 'POST',
+      body: {
+        course_id: courseId,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        college_name: data.institution,
+        year_of_study: data.year,
+        address: data.address,
+      },
     });
-    setBusy(false); setDone(true);
+    setBusy(false);
+    if (!r.ok) { setNotice(r.message || 'Submission failed — please try again.'); return; }
+    setTrainingId(r.data?.training?.id || null);
+    setDone(true);
+  }
+
+  async function pay() {
+    setPayBusy(true);
+    await apiRequest(API_V1_PAY_TRAINING, {
+      method: 'POST',
+      body: { training_id: trainingId, amount: COURSE_PRICING.discounted, email: data.email },
+    });
+    setPayBusy(false);
+    setPaid(true);
   }
 
   if (!course) return null;
@@ -101,10 +143,6 @@ export default function CourseModal({ course, open, onClose }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
               <div>
-                <p className="eyebrow no-line" style={{ marginBottom: 8 }}><User size={12} style={{ marginRight: 6 }} /> Mentor</p>
-                <p className="muted" style={{ fontSize: 14.5, lineHeight: 1.55 }}>{course.mentor}</p>
-              </div>
-              <div>
                 <p className="eyebrow no-line" style={{ marginBottom: 8 }}><Check size={12} style={{ marginRight: 6 }} /> Assessment</p>
                 <p className="muted" style={{ fontSize: 14.5, lineHeight: 1.55 }}>{course.assessment}</p>
               </div>
@@ -127,6 +165,7 @@ export default function CourseModal({ course, open, onClose }) {
               Reserve your seat at <strong style={{ color: 'var(--c-text)' }}>₹3,000</strong> — discount ends with the countdown above.
             </p>
 
+            {notice && <p style={{ marginBottom: 14, padding: '10px 14px', borderRadius: 'var(--r-md)', background: 'rgba(255,92,124,0.12)', border: '1px solid var(--c-danger)', color: 'var(--c-danger)', fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}><AlertCircle size={14} />{notice}</p>}
             <form onSubmit={submit} style={{ display: 'grid', gap: 14, gridTemplateColumns: '1fr 1fr' }} className="form-grid">
               <div className={`field ${errors.name ? 'field-error' : ''}`}>
                 <label className="field-label">Full name *</label>
@@ -148,9 +187,10 @@ export default function CourseModal({ course, open, onClose }) {
                 <input className="field-input" value={data.institution} onChange={(e) => update('institution', e.target.value)} placeholder="e.g. Jadavpur University" />
                 {errors.institution && <p className="field-error-msg"><AlertCircle size={12} /> {errors.institution}</p>}
               </div>
-              <div className="field">
-                <label className="field-label">Year of study</label>
-                <input className="field-input" value={data.year} onChange={(e) => update('year', e.target.value)} placeholder="Optional · e.g. 3rd year" />
+              <div className={`field ${errors.year ? 'field-error' : ''}`}>
+                <label className="field-label">Year of study *</label>
+                <input className="field-input" value={data.year} onChange={(e) => update('year', e.target.value)} placeholder="e.g. 3rd year" />
+                {errors.year && <p className="field-error-msg"><AlertCircle size={12} /> {errors.year}</p>}
               </div>
               <div className={`field ${errors.address ? 'field-error' : ''}`} style={{ gridColumn: '1 / -1' }}>
                 <label className="field-label">Full address *</label>
@@ -176,14 +216,26 @@ export default function CourseModal({ course, open, onClose }) {
             }
           `}</style>
         </div>
-      ) : (
+      ) : paid ? (
         <div className="success-panel">
           <div className="success-panel-icon"><CheckCircle2 size={32} /></div>
-          <h3 className="display display-sm" style={{ marginBottom: 10 }}>Seat reserved ✓</h3>
+          <h3 className="display display-sm" style={{ marginBottom: 10 }}>Enrolled ✓</h3>
           <p className="muted" style={{ maxWidth: 460, margin: '0 auto', lineHeight: 1.6 }}>
-            We've reserved your seat for <strong style={{ color: 'var(--c-text)' }}>{course.name}</strong>. We'll email <strong style={{ color: 'var(--c-text)' }}>{data.email}</strong> within a few hours with payment instructions and the welcome pack.
+            Payment confirmed for <strong style={{ color: 'var(--c-text)' }}>{course.name}</strong>. Welcome pack and batch details will be sent to <strong style={{ color: 'var(--c-text)' }}>{data.email}</strong>.
           </p>
           <button className="btn mt-6" onClick={() => { onClose(); setTimeout(reset, 240); }} style={{ marginTop: 28 }}>Close</button>
+        </div>
+      ) : (
+        <div className="success-panel">
+          <div className="success-panel-icon" style={{ background: 'rgba(79,138,254,0.15)', color: 'var(--c-blue)' }}><CheckCircle2 size={32} /></div>
+          <h3 className="display display-sm" style={{ marginBottom: 8 }}>Seat reserved ✓</h3>
+          <p className="muted" style={{ maxWidth: 420, margin: '0 auto 24px', lineHeight: 1.6, fontSize: 14 }}>
+            Complete payment to confirm your seat for <strong style={{ color: 'var(--c-text)' }}>{course.name}</strong>.
+          </p>
+          <button className="btn btn-primary btn-lg" disabled={payBusy} onClick={pay}>
+            {payBusy ? <span className="spinner" /> : <>Pay ₹{COURSE_PRICING.discounted.toLocaleString('en-IN')} →</>}
+          </button>
+          <p className="faint" style={{ fontSize: 12, marginTop: 14 }}>Secure payment · receipt sent to {data.email}</p>
         </div>
       )}
     </Modal>

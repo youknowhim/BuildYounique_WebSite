@@ -206,9 +206,6 @@ export default function Home({ onNavigate, onOpenCourse }) {
             {TEAM.slice(0, 3).map((m, i) => (
               <Reveal key={m.name} delay={i * 80}>
                 <div className="team-card">
-                  <div className="team-photo">
-                    <img src={m.img} alt={m.name} onError={(e) => { e.target.style.display = 'none'; }} />
-                  </div>
                   <div style={{ marginTop: 16 }}>
                     <h4 className="display display-sm" style={{ marginBottom: 4 }}>{m.name}</h4>
                     <p className="mono" style={{ fontSize: 12, color: 'var(--c-blue)', marginBottom: 10, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{m.role}</p>
