@@ -5,6 +5,7 @@ const AppError = require("./utils/appError.js");
 const globalErrorHandler = require("./utils/globalErrorHandler");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger.js");
+const path = require("path");
 
 const user_Router = require("./routes/userRouter.js");
 const collegeRouter = require("./routes/collegeRouter.js");
@@ -14,11 +15,15 @@ const contactRouter = require("./routes/contactRouter.js");
 const hackathonEventRouter = require("./routes/hackathonEventRouter.js");
 const coursesRouter = require("./routes/coursesRouter.js");
 const trainingRouter = require("./routes/trainingRouter.js");
+const jobDescriptionRouter = require("./routes/jobDescriptionRouter.js");
 const app = express();
 app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files (resumes, etc.)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
@@ -29,6 +34,7 @@ app.use("/api/v1/teams", teamRouter);
 app.use("/api/v1/career-applications", careerRouter);
 app.use("/api/v1/contact-enquiries", contactRouter);
 app.use("/api/v1/hackathon-events", hackathonEventRouter);
+app.use("/api/v1/job-descriptions", jobDescriptionRouter);
 app.use("/api/v1/courses", coursesRouter);
 app.use("/api/v1/trainings", trainingRouter);
 

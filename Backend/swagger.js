@@ -121,6 +121,58 @@ const swaggerDefinition = {
         },
         required: ["team_id"],
       },
+      // CareerApplication: {
+      //   type: "object",
+      //   properties: {
+      //     full_name: { type: "string", example: "John Doe" },
+      //     email: { type: "string", example: "john@example.com" },
+      //     phone: { type: "string", example: "+919876543210" },
+      //     applying_role: { type: "string", example: "Software Engineer" },
+      //     years_of_experience: {
+      //       type: "number",
+      //       format: "decimal",
+      //       example: 3.5,
+      //     },
+      //     skills: {
+      //       type: "array",
+      //       items: { type: "string", example: "JavaScript" },
+      //       example: ["JavaScript", "Node.js", "React"],
+      //     },
+      //     resume_url: {
+      //       type: "string",
+      //       example: "https://example.com/resume.pdf",
+      //     },
+      //     resume_file_name: { type: "string", example: "resume.pdf" },
+      //     resume_file_size: { type: "integer", example: 123456 },
+      //     linkedin_url: {
+      //       type: "string",
+      //       example: "https://linkedin.com/in/johndoe",
+      //     },
+      //     portfolio_url: {
+      //       type: "string",
+      //       example: "https://portfolio.example.com",
+      //     },
+      //     github_url: { type: "string", example: "https://github.com/johndoe" },
+      //     current_location: { type: "string", example: "Bengaluru, India" },
+      //     college_name: { type: "string", example: "BuildYounique University" },
+      //     current_company: { type: "string", example: "Acme Corp" },
+      //     current_ctc: { type: "number", format: "decimal", example: 8.5 },
+      //     expected_ctc: { type: "number", format: "decimal", example: 12.0 },
+      //     notice_period_days: { type: "integer", example: 30 },
+      //     cover_letter: {
+      //       type: "string",
+      //       example: "I am excited to apply for this position because...",
+      //     },
+      //   },
+      //   required: [
+      //     "full_name",
+      //     "email",
+      //     "phone",
+      //     "applying_role",
+      //     "skills",
+      //     "resume_url",
+      //   ],
+      // },
       CareerApplication: {
         type: "object",
         properties: {
@@ -172,6 +224,26 @@ const swaggerDefinition = {
           "skills",
           "resume_url",
         ],
+      },
+      ContactEnquiry: {
+        type: "object",
+        properties: {
+          name: { type: "string", example: "Jane Doe" },
+          email: { type: "string", example: "jane@example.com" },
+          phone: { type: "string", example: "+919876543210" },
+          service_required: { type: "string", example: "Website Development" },
+          project_description: {
+            type: "string",
+            example:
+              "I need a website and branding support for my new business.",
+          },
+          status: {
+            type: "string",
+            example: "new",
+            enum: ["new", "contacted", "in_discussion", "converted", "closed"],
+          },
+        },
+        required: ["name", "email", "phone", "project_description"],
       },
       ContactEnquiry: {
         type: "object",
@@ -248,6 +320,51 @@ const swaggerDefinition = {
             example: "2026-06-03T12:00:00Z",
           },
         },
+      },
+      JobDescription: {
+        type: "object",
+        properties: {
+          job_title: { type: "string", example: "Frontend Developer" },
+          location: { type: "string", example: "Bengaluru, India" },
+          employment_type: {
+            type: "string",
+            example: "Full-Time",
+            enum: [
+              "Full-Time",
+              "Part-Time",
+              "Contract",
+              "Internship",
+              "Freelance",
+            ],
+          },
+          experience_required: {
+            type: "number",
+            format: "decimal",
+            example: 2.5,
+          },
+          job_description: {
+            type: "string",
+            example:
+              "Build UI components and collaborate with the design team.",
+          },
+          openings: { type: "integer", example: 2 },
+          status: {
+            type: "string",
+            example: "Active",
+            enum: ["Draft", "Active", "Closed"],
+          },
+          created_at: {
+            type: "string",
+            format: "date-time",
+            example: "2026-06-03T12:00:00Z",
+          },
+          updated_at: {
+            type: "string",
+            format: "date-time",
+            example: "2026-06-03T12:00:00Z",
+          },
+        },
+        required: ["job_title", "job_description"],
       },
     },
   },
@@ -495,8 +612,42 @@ const swaggerDefinition = {
         requestBody: {
           required: true,
           content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/CareerApplication" },
+            "multipart/form-data": {
+              schema: {
+                type: "object",
+                properties: {
+                  full_name: { type: "string" },
+                  email: { type: "string" },
+                  phone: { type: "string" },
+                  applying_role: { type: "string" },
+                  years_of_experience: { type: "number", format: "decimal" },
+                  skills: {
+                    type: "string",
+                    example: "['JavaScript','Node.js']",
+                  },
+                  resume: { type: "string", format: "binary" },
+                  resume_url: { type: "string" },
+                  resume_file_name: { type: "string" },
+                  resume_file_size: { type: "integer" },
+                  linkedin_url: { type: "string" },
+                  portfolio_url: { type: "string" },
+                  github_url: { type: "string" },
+                  current_location: { type: "string" },
+                  college_name: { type: "string" },
+                  current_company: { type: "string" },
+                  current_ctc: { type: "number", format: "decimal" },
+                  expected_ctc: { type: "number", format: "decimal" },
+                  notice_period_days: { type: "integer" },
+                  cover_letter: { type: "string" },
+                },
+                required: [
+                  "full_name",
+                  "email",
+                  "phone",
+                  "applying_role",
+                  "skills",
+                ],
+              },
             },
           },
         },
@@ -660,6 +811,54 @@ const swaggerDefinition = {
         tags: ["Hackathon"],
         summary: "Delete a hackathon event by ID",
         responses: { 204: { description: "Event deleted" } },
+      },
+    },
+    "/api/v1/job-descriptions": {
+      get: {
+        tags: ["JobDescription"],
+        summary: "Get all job descriptions",
+        responses: { 200: { description: "Job descriptions list" } },
+      },
+      post: {
+        tags: ["JobDescription"],
+        summary: "Create a new job description",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/JobDescription" },
+            },
+          },
+        },
+        responses: { 201: { description: "Job description created" } },
+      },
+    },
+    "/api/v1/job-descriptions/{id}": {
+      parameters: [
+        { name: "id", in: "path", required: true, schema: { type: "integer" } },
+      ],
+      get: {
+        tags: ["JobDescription"],
+        summary: "Get a job description by ID",
+        responses: { 200: { description: "Job description details" } },
+      },
+      put: {
+        tags: ["JobDescription"],
+        summary: "Update a job description by ID",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/JobDescription" },
+            },
+          },
+        },
+        responses: { 200: { description: "Job description updated" } },
+      },
+      delete: {
+        tags: ["JobDescription"],
+        summary: "Delete a job description by ID",
+        responses: { 204: { description: "Job description deleted" } },
       },
     },
   },
