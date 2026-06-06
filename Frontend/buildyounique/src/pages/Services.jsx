@@ -27,13 +27,13 @@ export default function Services({ onNavigate }) {
               const flip = i % 2 === 1;
               return (
                 <Reveal key={s.id} delay={i * 40}>
-                  <article className="surface" style={{
+                  <article className="surface svc-row" style={{
                     padding: 'clamp(28px, 4vw, 48px)',
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
                     gap: 'clamp(28px, 4vw, 56px)',
                     alignItems: 'center',
-                  }} className="svc-row">
+                  }}>
                     <div style={{ order: flip ? 2 : 1 }}>
                       <div className="flex items-center gap-3 mb-4" style={{ marginBottom: 18 }}>
                         <div className="gradient-icon-disk" style={{ background: s.grad, border: 'none' }}><Icon size={22} /></div>
