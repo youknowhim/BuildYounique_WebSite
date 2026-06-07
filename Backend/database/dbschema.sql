@@ -1,5 +1,5 @@
 
-CREATE TABLE career_applications (
+CREATE TABLE If not exists career_applications (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     full_name VARCHAR(255) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE career_applications (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE contact_enquiries (
+CREATE TABLE If not exists contact_enquiries (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     name VARCHAR(255) NOT NULL,
@@ -72,10 +72,10 @@ CREATE TABLE contact_enquiries (
     ) DEFAULT 'new',
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE colleges (
+CREATE TABLE If not exists colleges (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     college_name VARCHAR(255) NOT NULL,
     contact_person VARCHAR(255),
@@ -87,13 +87,13 @@ CREATE TABLE colleges (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table hackathon_events(
+create table If not exists hackathon_events(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    event_name VARCHAR(255) NOT NULL;
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-)
+    event_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE teams (
+CREATE TABLE If not exists teams (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     hackathon_event_id BIGINT NOT NULL,
     college_id BIGINT NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE teams (
     CONSTRAINT fk_team_college FOREIGN KEY (college_id) REFERENCES colleges(id) ON DELETE CASCADE
 );
 
-CREATE TABLE team_members (
+CREATE TABLE If not exists team_members (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     team_id BIGINT NOT NULL,
     email VARCHAR(255),
@@ -122,7 +122,7 @@ CREATE TABLE team_members (
         ON DELETE CASCADE
 );
 
-CREATE TABLE email_otps (
+CREATE TABLE If not exists email_otps (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     email VARCHAR(255) NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE email_otps (
 );
 
 
-CREATE TABLE promo_codes (
+CREATE TABLE If not exists promo_codes (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     college_id BIGINT NOT NULL,
     promo_code VARCHAR(50) UNIQUE NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE promo_codes (
         ON DELETE CASCADE
 );
 
-CREATE TABLE payments (
+CREATE TABLE If not exists payments (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     college_id BIGINT NOT NULL,
     promo_code_id BIGINT NULL,
@@ -174,7 +174,7 @@ CREATE TABLE payments (
     FOREIGN KEY (promo_code_id) REFERENCES promo_codes(id)
 );
 
-CREATE TABLE payment_teams (
+CREATE TABLE If not exists payment_teams (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     payment_id BIGINT NOT NULL,
     team_id BIGINT NOT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE payment_teams (
 );
 
 
-create table courses(
+create table If not exists courses(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,  
  name VARCHAR(255) NOT NULL,
  description TEXT NOT NULL,
@@ -192,10 +192,10 @@ create table courses(
  course_type varchar(255) not null,
  price DECIMAL(10,2) NOT NULL,
  discounted_price DECIMAL(10,2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-create table training(
+create table If not exists training(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     course_id BIGINT NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -205,11 +205,11 @@ create table training(
     year_of_study VARCHAR(50) NOT NULL,
     address VARCHAR(500) NOT NULL,
     FOREIGN KEY (course_id) REFERENCES courses(id) on delete cascade,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
-CREATE TABLE job_descriptions (
+CREATE TABLE If not exists job_descriptions (
 
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     job_title VARCHAR(255) NOT NULL,
