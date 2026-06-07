@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   CheckCircle2, AlertCircle, Users, Trophy, Clock, ShieldCheck,
-  Mail, CreditCard, LogOut, ArrowRight,
+  Mail, CreditCard, LogOut, ArrowRight, ChevronDown, ChevronUp
 } from 'lucide-react';
 import Modal from '../components/Modal.jsx';
 import {
@@ -21,6 +21,7 @@ export default function HackathonModal({ hack, open, onClose, mode = 'register' 
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
 
   const [colleges, setColleges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -48,7 +49,7 @@ export default function HackathonModal({ hack, open, onClose, mode = 'register' 
   const [loginEmail, setLoginEmail] = useState('');
 
   const reset = useCallback(() => {
-    setStep('form'); setData(BLANK); setErrors({}); setBusy(false); setNotice('');
+    setStep('form'); setData(BLANK); setErrors({}); setBusy(false); setNotice(''); setDetailsExpanded(false);
     setTeamId(null); setToken(null); setLeaderEmail(''); setOtp('');
     setTeam(null); setMembers([]); setMemberEmail(''); setMemberId(null); setLoginEmail('');
   }, []);
@@ -293,16 +294,53 @@ export default function HackathonModal({ hack, open, onClose, mode = 'register' 
       {step === 'form' && (
         <div>
           {header({ eyebrow: `Register · Team of ${TEAM_SIZE}`, sub: hack?.tagline })}
-          {hack?.stages && (
-            <div style={{ padding: '18px 32px 0' }}>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                {hack.stages.map((s) => (
-                  <div key={s.n} style={{ flex: 1, minWidth: 100, padding: '12px 14px', background: 'var(--c-ink-0)', border: '1px solid var(--c-border)', borderRadius: 'var(--r-md)' }}>
-                    <p className="mono" style={{ fontSize: 10, color: 'var(--c-faint)', marginBottom: 4 }}>{s.n} · {s.time}</p>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--c-text)' }}>{s.title}</p>
+          {(hack?.stages || hack?.prizesList) && (
+            <div style={{ padding: '24px 32px 0' }}>
+              <button 
+                type="button"
+                className="btn btn-ghost btn-sm w-full" 
+                onClick={() => setDetailsExpanded(!detailsExpanded)} 
+                style={{ padding: '8px 0', color: 'var(--c-blue)', display: 'flex', justifyContent: 'center', background: 'var(--c-ink-0)' }}
+              >
+                {detailsExpanded ? <ChevronUp size={16} style={{ marginRight: 6 }} /> : <ChevronDown size={16} style={{ marginRight: 6 }} />} 
+                {detailsExpanded ? 'Hide hackathon details' : 'View full details & stages before applying'}
+              </button>
+              
+              {detailsExpanded && (
+                <div style={{ marginTop: 12, padding: '20px', background: 'var(--c-bg)', borderRadius: 'var(--r-md)', border: '1px solid var(--c-border)' }}>
+                  <h5 className="display display-sm" style={{ marginBottom: 16, fontSize: 16 }}>Rounds & Stages</h5>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+                    {hack.stages.map((st) => (
+                      <div key={st.n} style={{ borderLeft: '2px solid var(--c-blue)', paddingLeft: 14 }}>
+                        <p className="mono" style={{ fontSize: 11, color: 'var(--c-blue)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          Stage {st.n} {st.time ? `· ${st.time}` : ''}
+                        </p>
+                        <p style={{ fontWeight: 600, fontSize: 14.5, marginBottom: 4 }}>{st.title}</p>
+                        <p className="muted" style={{ fontSize: 13.5, lineHeight: 1.5 }}>{st.desc || st.time}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                  
+                  {hack.prizesList && (
+                    <>
+                      <h5 className="display display-sm" style={{ marginBottom: 16, fontSize: 16 }}>Prize Structure</h5>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12, marginBottom: 16 }}>
+                        {hack.prizesList.map(p => (
+                          <div key={p.label} style={{ background: 'var(--c-surface)', padding: '12px 14px', borderRadius: 'var(--r-sm)', border: '1px solid var(--c-border)' }}>
+                            <p className="muted" style={{ fontSize: 11.5, marginBottom: 4 }}>{p.label}</p>
+                            <p className="display" style={{ fontSize: 16, color: 'var(--c-text)' }}>{p.amount}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  {hack.prizeNote && (
+                    <p className="muted" style={{ fontSize: 12, fontStyle: 'italic', lineHeight: 1.55 }}>
+                      * {hack.prizeNote}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           )}
           <form onSubmit={submitRegister} style={{ padding: '28px 32px 32px' }}>
