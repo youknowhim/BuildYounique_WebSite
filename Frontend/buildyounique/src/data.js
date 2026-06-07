@@ -212,7 +212,18 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #4F8AFE 0%, #06D6A0 100%)',
     categories: ['Consumer', 'B2B SaaS', 'D2C', 'Marketplace', 'Sustainability'],
     description: 'Founders, designers and engineers team up to ship a real go-to-market in 48 hours. Mentorship from VCs and seasoned operators.',
-    stages: [{ n: '01', title: 'Ideation', time: 'Hrs 0–6' }, { n: '02', title: 'Build & pitch deck', time: 'Hrs 6–40' }, { n: '03', title: 'Demo day', time: 'Hrs 40–48' }],
+    stages: [
+      { n: '01', title: 'Idea Selection', desc: 'Best idea gets mentor support for project prototype building + ₹3,000 preparation grant per candidate.' },
+      { n: '02', title: 'Prototype Selection', time: 'Within 2 weeks', desc: 'District level selection (2 teams/district). Winners get ₹4,000 for product enhancement support.' },
+      { n: '03', title: 'Financial & Marketing Proposal', time: 'Within 7 weeks', desc: 'Submit financial and marketing proposals. Best proposal gets ₹60,000 funding for product advancement.' },
+      { n: '04', title: 'Business Management Proposal', desc: 'Top 3 candidates selected for Business Registration, ₹5 LPA funding for business start, plus a trip to Singapore.' }
+    ],
+    prizesList: [
+      { label: '1st Best Prototype', amount: '₹1,00,000' },
+      { label: '2nd Best Prototype', amount: '₹90,000' },
+      { label: '3rd Best Prototype', amount: '₹70,000' }
+    ],
+    prizeNote: 'Candidates will receive support for business registration, manpower planning, and a 3-year support term for the business. A 5% share will be taken for 5 years.',
   },
   {
     id: 'codeathon', name: 'Codeathon', duration: '36 hrs', mode: 'Online', prize: '₹3,00,000',
@@ -220,7 +231,18 @@ export const HACKATHONS = [
     grad: 'linear-gradient(135deg, #A855F7 0%, #4F8AFE 100%)',
     categories: ['Web', 'Mobile', 'Backend', 'Systems', 'Open Source'],
     description: 'Tight problem statements, brutal judging on code quality, performance and architecture. Bring your editor of choice.',
-    stages: [{ n: '01', title: 'Problem reveal', time: 'Hrs 0–2' }, { n: '02', title: 'Build sprint', time: 'Hrs 2–30' }, { n: '03', title: 'Code review & judging', time: 'Hrs 30–36' }],
+    stages: [
+      { n: '01', title: 'Idea Selection', desc: 'Best idea gets mentor support for project prototype building + ₹3,000 preparation grant per candidate.' },
+      { n: '02', title: 'Prototype Selection', time: 'Within 2 weeks', desc: 'District level selection (2 teams/district). Winners get ₹4,000 for product enhancement support.' },
+      { n: '03', title: 'Financial & Marketing Proposal', time: 'Within 7 weeks', desc: 'Submit financial and marketing proposals. Best proposal gets ₹60,000 funding for product advancement.' },
+      { n: '04', title: 'Business Management Proposal', desc: 'Top 3 candidates selected for Business Registration, ₹5 LPA funding for business start, plus a trip to Singapore.' }
+    ],
+    prizesList: [
+      { label: '1st Best Prototype', amount: '₹1,00,000' },
+      { label: '2nd Best Prototype', amount: '₹90,000' },
+      { label: '3rd Best Prototype', amount: '₹70,000' }
+    ],
+    prizeNote: 'Candidates will receive support for business registration, manpower planning, and a 3-year support term for the business. A 5% share will be taken for 5 years.',
   },
   {
     id: 'gameathon', name: 'Gameathon', duration: '48 hrs', mode: 'Hybrid', prize: '₹2,00,000',
