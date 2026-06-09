@@ -3,30 +3,45 @@
 // Edit URLs / dates here only.
 // ============================================================
 
+// --- Backend base URL ----------------------------------------------
+// Set VITE_API_BASE in your .env to override per environment.
+//   .env.development → VITE_API_BASE=http://localhost:3000
+//   .env.production  → VITE_API_BASE=https://api.buildyounique.com
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
+const API_V1 = `${API_BASE}/api/v1`;
+
 // --- API endpoints --------------------------------------------------
-// Fill in real URLs when backend is live, then uncomment the real fetch
-// block inside apiCall() below.
 export const API_ENDPOINTS = {
-  contact:    'https://api.buildyounique.com/contact',
-  careers:    'https://api.buildyounique.com/careers',
-  hackathon:  'https://api.buildyounique.com/hackathon',
-  training:   'https://api.buildyounique.com/training',
-  newsletter: 'https://api.buildyounique.com/newsletter',
-  chat:       'https://api.buildyounique.com/chat',
-  brochure:   'https://api.buildyounique.com/brochure',
-  coupon:     'https://api.buildyounique.com/coupon',
+  contact:    `${API_BASE}/api/v1/contact-enquiries`,
+  careers:    `${API_BASE}/api/careers`,
+  hackathon:  `${API_BASE}/api/hackathon`,
+  training:   `${API_BASE}/api/training`,
+  newsletter: `${API_BASE}/api/newsletter`,
+  chat:       `${API_BASE}/api/chat`,
+  brochure:   `${API_BASE}/api/brochure`,
+  coupon:     `${API_BASE}/api/coupon`,
+  jobDescriptions: `${API_V1}/job-descriptions`,
 };
 
-// --- Single API helper ----------------------------------------------
+// --- Hackathon / team registration API (real backend: /api/v1) ------
+export const HACKATHON_API = {
+  colleges:        `${API_V1}/colleges`,                 // GET   list colleges (dropdown)
+  hackathonEvents: `${API_V1}/hackathon-events`,         // GET   list hackathons (dropdown)
+  teams:           `${API_V1}/teams`,                    // POST  create team  (+ GET /:id)
+  teamVerifyEmail: `${API_V1}/teams/verify-email`,       // POST  { team_id, otp }  verify leader
+  teamLogin:       `${API_V1}/teams/login`,              // POST  { team_leader_email }  send login OTP
+  teamLoginVerify: `${API_V1}/teams/login/verify`,       // POST  { team_id, otp } -> { token }
+  teamMembers:     `${API_V1}/teams/members`,            // POST  { team_id, email } (auth)  + GET ?team_id=
+  memberVerify:    `${API_V1}/teams/members/verify-email`, // POST { member_id, otp } (auth)
+  payHackathon:    `${API_V1}/payments/hackathon`,         // POST { team_id, amount, email } — swap for real gateway
+  payTraining:     `${API_V1}/payments/training`,          // POST { training_id, amount, email } — swap for real gateway
+};
+
+// --- Single API helper (legacy POST forms) --------------------------
+// Real fetch. Returns { ok, ...payload } from the server, or
+// { ok: false, message } on network / non-2xx errors.
 export async function apiCall(endpoint, payload) {
   console.log('[apiCall]', endpoint, payload);
-
-  // --- MOCK MODE (current) -----------------------------------------
-  await new Promise((r) => setTimeout(r, 900));
-  return { ok: true, message: 'Mock success — wire the real backend in src/config.js.' };
-
-  // --- REAL MODE — uncomment when ready ---------------------------
-  /*
   try {
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -39,8 +54,47 @@ export async function apiCall(endpoint, payload) {
     console.error('[apiCall] failed', err);
     return { ok: false, message: err.message || 'Request failed' };
   }
-  */
 }
+
+// --- Flexible API request (GET/POST/PUT, optional Bearer token) -----
+// Returns { ok, status, message, data } — backend wraps payloads in `data`.
+export async function apiRequest(url, { method = 'GET', body, token } = {}) {
+  console.log('[apiRequest]', method, url, body || '');
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, message: json.message || `Request failed (${res.status})`, ...json };
+    }
+    return { ok: true, ...json };
+  } catch (err) {
+    console.error('[apiRequest] failed', err);
+    return { ok: false, message: err.message || 'Network error — is the server running?' };
+  }
+}
+
+// --- Team session (localStorage) ------------------------------------
+// Persists the JWT + team id so a leader can reopen the dashboard.
+const SESSION_KEY = 'byq_team_session';
+export const teamSession = {
+  get() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY)) || null; }
+    catch { return null; }
+  },
+  set(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); },
+  clear() { localStorage.removeItem(SESSION_KEY); },
+};
+
+// --- Hackathon pricing ----------------------------------------------
+export const FEE_PER_MEMBER = 600;   // ₹ per member (backend default)
+export const TEAM_SIZE = 2;          // hackathons are 2-member teams
 
 // --- Coupon validator -----------------------------------------------
 // Mock coupon table — replace with real backend call when ready.
@@ -59,19 +113,13 @@ export async function validateCoupon(code) {
 }
 
 // --- Discount end date ----------------------------------------------
-// 20 days from now. For production, hardcode an ISO date so countdown
-// stays consistent across all users:
-//   export const DISCOUNT_END = new Date('2026-06-19T23:59:59+05:30');
-const _now = Date.now();
-export const DISCOUNT_END = new Date(_now + 20 * 24 * 60 * 60 * 1000);
+// 20 days from now. Hardcoded to avoid reset on refresh.
+export const DISCOUNT_END = new Date('2026-06-26T16:45:01+05:30');
 
 // --- ASSETS — central image registry --------------------------------
 // Swap any URL here once you have real photos.
 // Every <img> uses these paths and has an onError fallback so a
 // missing image never breaks the layout.
-//
-// While placeholders are in use, we point at high-quality Unsplash
-// images that look like a real working studio.
 export const ASSETS = {
   // Team photos (5)
   team: {
