@@ -53,6 +53,12 @@ app.get("/health", (req, res) => {
   res.status(200).send("API server up");
 });
 
+app.get("/my-ip", async (req, res) => {
+  const response = await fetch("https://api.ipify.org?format=json");
+  const data = await response.json();
+  res.json(data);
+});
+
 app.post("/api/chat", async (req, res) => {
   const { message, history = [] } = req.body || {};
 
