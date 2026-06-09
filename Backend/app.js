@@ -16,13 +16,19 @@ const hackathonEventRouter = require("./routes/hackathonEventRouter.js");
 const coursesRouter = require("./routes/coursesRouter.js");
 const trainingRouter = require("./routes/trainingRouter.js");
 const jobDescriptionRouter = require("./routes/jobDescriptionRouter.js");
+const paymentRouter = require("./routes/paymentRouter.js");
 const app = express();
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "http://localhost:5173",
   "http://localhost:5174",
 ].filter(Boolean);
-app.use(cors({ origin: (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)) }));
+app.use(
+  cors({
+    origin: (origin, cb) =>
+      cb(null, !origin || allowedOrigins.includes(origin)),
+  }),
+);
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,6 +52,7 @@ app.use("/api/v1/career-applications", careerRouter);
 app.use("/api/v1/contact-enquiries", contactRouter);
 app.use("/api/v1/hackathon-events", hackathonEventRouter);
 app.use("/api/v1/job-descriptions", jobDescriptionRouter);
+app.use("/api/v1/payments", paymentRouter);
 app.use("/api/v1/courses", coursesRouter);
 app.use("/api/v1/trainings", trainingRouter);
 

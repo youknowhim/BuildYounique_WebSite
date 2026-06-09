@@ -5,39 +5,22 @@ CREATE TABLE If not exists career_applications (
     full_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
-
-
     applying_role VARCHAR(255) NOT NULL,
     years_of_experience DECIMAL(4,1) DEFAULT 0,
-
-
     skills JSON NOT NULL,
-
-
     resume_url VARCHAR(500) NOT NULL,
     resume_file_name VARCHAR(255),
     resume_file_size BIGINT,
-
-
     linkedin_url VARCHAR(500),
     portfolio_url VARCHAR(500),
     github_url VARCHAR(500),
-
-  
     current_location VARCHAR(255),
     college_name VARCHAR(255),
     current_company VARCHAR(255),
-
-
     current_ctc DECIMAL(12,2),
     expected_ctc DECIMAL(12,2),
-
     notice_period_days INT,
-
-  
     cover_letter TEXT,
-
-    
     application_status ENUM(
         'pending',
         'reviewing',
@@ -46,8 +29,6 @@ CREATE TABLE If not exists career_applications (
         'selected',
         'rejected'
     ) DEFAULT 'pending',
-
-
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -122,7 +103,49 @@ CREATE TABLE If not exists team_members (
         ON DELETE CASCADE
 );
 
-CREATE TABLE If not exists email_otps (
+
+
+CREATE TABLE If not exists promo_codes (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    college_id BIGINT NOT NULL,
+    promo_code VARCHAR(50) UNIQUE NOT NULL,
+    discount_amount DECIMAL(10,2) NOT NULL, 
+    used_count INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_promo_college
+        FOREIGN KEY (college_id)
+        REFERENCES colleges(id)
+        ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE payments (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    college_id BIGINT NOT NULL,
+    promo_code_id BIGINT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    discount_amount DECIMAL(10,2) DEFAULT 0,
+    final_amount DECIMAL(10,2) NOT NULL,
+    payment_status ENUM('pending','paid','failed') DEFAULT 'pending',
+    transaction_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (college_id) REFERENCES colleges(id),
+    FOREIGN KEY (promo_code_id) REFERENCES promo_codes(id)
+);
+
+CREATE TABLE If not exists payment_teams (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    payment_id BIGINT NOT NULL,
+    team_id BIGINT NOT NULL,
+    FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE email_otps (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     email VARCHAR(255) NOT NULL,
@@ -145,46 +168,8 @@ CREATE TABLE If not exists email_otps (
 );
 
 
-CREATE TABLE If not exists promo_codes (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    college_id BIGINT NOT NULL,
-    promo_code VARCHAR(50) UNIQUE NOT NULL,
-    discount_amount DECIMAL(10,2) NOT NULL, 
-    used_count INT DEFAULT 0,
-    is_active BOOLEAN DEFAULT TRUE,
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_promo_college
-        FOREIGN KEY (college_id)
-        REFERENCES colleges(id)
-        ON DELETE CASCADE
-);
 
-CREATE TABLE If not exists payments (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    college_id BIGINT NOT NULL,
-    promo_code_id BIGINT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    discount_amount DECIMAL(10,2) DEFAULT 0,
-    final_amount DECIMAL(10,2) NOT NULL,
-    payment_status ENUM('pending','paid','failed') DEFAULT 'pending',
-    transaction_id VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (college_id) REFERENCES colleges(id),
-    FOREIGN KEY (promo_code_id) REFERENCES promo_codes(id)
-);
-
-CREATE TABLE If not exists payment_teams (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    payment_id BIGINT NOT NULL,
-    team_id BIGINT NOT NULL,
-
-    FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE CASCADE,
-    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
-);
-
-
-create table If not exists courses(
+create table courses(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,  
  name VARCHAR(255) NOT NULL,
  description TEXT NOT NULL,
@@ -216,13 +201,9 @@ CREATE TABLE If not exists job_descriptions (
     location VARCHAR(255),
     employment_type ENUM(
         'Full-Time',
-
         'Part-Time',
-
         'Contract',
-
         'Internship',
-
         'Freelance'
 
     ) DEFAULT 'Full-Time',
