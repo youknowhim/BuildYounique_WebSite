@@ -5,9 +5,6 @@ const catchAsyncError = require("../../utils/catchAsyncError");
 const CASHFREE_SANDBOX_URL = "https://sandbox.cashfree.com";
 const CASHFREE_PROD_URL = "https://api.cashfree.com";
 
-console.log("CASHFREE_APP_ID:", process.env.CASHFREE_APP_ID);
-console.log("CASHFREE_SECRET_KEY:", process.env.CASHFREE_SECRET_KEY);
-
 const ensureFetchAvailable = () => {
   if (typeof fetch !== "function") {
     throw new AppError(

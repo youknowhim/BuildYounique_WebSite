@@ -147,6 +147,13 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 
+console.log("SMTP Configuration:", {
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  user: process.env.SMTP_USER ? "****" : null,
+  pass: process.env.SMTP_PASSWORD ? "****" : null,
+});
+
 // ================================
 // BREVO SMTP CONFIGURATION
 // ================================
@@ -158,12 +165,28 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
   },
+  logger: true,
+  debug: true,
 });
 
 // Test SMTP connection
+// transporter.verify((error, success) => {
+//   if (error) {
+//     console.error("SMTP Connection Error:", error);
+//   } else {
+//     console.log("Brevo SMTP Connected Successfully");
+//   }
+// });
+
 transporter.verify((error, success) => {
   if (error) {
-    console.error("SMTP Connection Error:", error);
+    console.error("SMTP Connection Error:");
+    console.error("Message:", error.message);
+    console.error("Code:", error.code);
+    console.error("Command:", error.command);
+    console.error("Response:", error.response);
+    console.error("Response Code:", error.responseCode);
+    console.error("Full Error:", JSON.stringify(error, null, 2));
   } else {
     console.log("Brevo SMTP Connected Successfully");
   }
