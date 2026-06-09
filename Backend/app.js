@@ -16,11 +16,28 @@ const hackathonEventRouter = require("./routes/hackathonEventRouter.js");
 const coursesRouter = require("./routes/coursesRouter.js");
 const trainingRouter = require("./routes/trainingRouter.js");
 const jobDescriptionRouter = require("./routes/jobDescriptionRouter.js");
+const paymentRouter = require("./routes/paymentRouter.js");
 const app = express();
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+].filter(Boolean);
+app.use(
+  cors({
+    origin: (origin, cb) =>
+      cb(null, !origin || allowedOrigins.includes(origin)),
+  }),
+);
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const SYSTEM_PROMPT = `You are the official AI assistant for Buildyounique, a software development studio based in Howrah, West Bengal (India). 
+You help clients with inquiries about our services, training courses, hackathons, careers, and contact information. 
+Our services include: Web Development, Mobile App Development, AI Development, Blockchain, Cloud Solutions, AR/VR, and RPA Automation.
+Our live training courses include Full-Stack, Mobile, AI, Blockchain, Cloud, and Cyber Security. They are currently discounted to ₹3,000 (from ₹5,000).
+Our hackathons include Businessathon, Codeathon, Gameathon, Cyberthon, and AIthon. Entry is ₹1,000 per team of 2.
+Be professional, concise, and helpful. Always encourage users to contact us via email at buildyounique2020@gmail.com or WhatsApp at +91 70478 29662 for more specific inquiries.`;
 
 // Serve uploaded files (resumes, etc.)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -35,6 +52,7 @@ app.use("/api/v1/career-applications", careerRouter);
 app.use("/api/v1/contact-enquiries", contactRouter);
 app.use("/api/v1/hackathon-events", hackathonEventRouter);
 app.use("/api/v1/job-descriptions", jobDescriptionRouter);
+app.use("/api/v1/payments", paymentRouter);
 app.use("/api/v1/courses", coursesRouter);
 app.use("/api/v1/trainings", trainingRouter);
 
