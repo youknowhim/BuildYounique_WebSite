@@ -132,9 +132,9 @@ export const PARTNERS = [
 
 // --- Team (5) -------------------------------------------------------
 export const TEAM = [
-  { name: 'Arnab Sengupta',     role: 'Engineering Lead',           bio: 'Leads MERN / Next.js teams. 9 years across product engineering.' },
-  { name: 'Riya Mukherjee',     role: 'Design Lead',                bio: 'Product design and motion. Previously at consumer fintech.' },
-  { name: 'Aditya Sharma',      role: 'Software Engineer',          bio: 'Full-stack engineer. React, Node, infra.' },
+  { name: 'Pallav Rai',     role: 'Engineering Lead',           bio: 'Leads MERN / Next.js teams.' },
+  { name: 'Prateek mishra',     role: 'snior NodeJS developer',                bio: 'Product Architecture. Previously at consumer fintech.' },
+  { name: 'Ajay Sharma',      role: 'Mobile Apps Lead',          bio: 'Leads Flutter , IOS , Android' },
   { name: 'Priya Sharma',       role: 'Technical Project Manager',  bio: 'Delivery, scope, sprints. Keeps the trains running.' },
   { name: 'Rohan Chatterjee',   role: 'AI Engineer',                bio: 'RAG systems, LLM applications, fine-tuning pipelines.' },
 ];
